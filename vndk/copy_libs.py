@@ -23,6 +23,9 @@ for vndk_version, libs in {
         "libstagefright_foundation",
         "libutils",
     ],
+    "v34": [
+        "libui",
+    ],
 }.items():
     for lib in libs:
         for arch in ["arm", "arm64"]:
@@ -53,6 +56,17 @@ for vndk_version, libs in {
                                 PATCHELF_PATH,
                                 "--add-needed",
                                 "libprocessgroup_shim.so",
+                                lib_dest,
+                            ]
+                        )
+
+                    if vndk_version == "v34" and lib == "libui":
+                        subprocess.run(
+                            [
+                                PATCHELF_PATH,
+                                "--replace-needed",
+                                "android.hardware.graphics.common-V4-ndk.so",
+                                "android.hardware.graphics.common-V6-ndk.so",
                                 lib_dest,
                             ]
                         )
